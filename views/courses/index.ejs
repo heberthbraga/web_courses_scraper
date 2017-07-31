@@ -1,1 +1,31 @@
-<label>Selecione o Curso:</label>
+<div class="page-header">
+	<h2>Last Watched Courses</h2>
+</div>
+
+<div class="inner_content">
+	<% if (lastWatchedCourses.length > 0) { %>
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Instructor</th>
+						<th>Number of Videos</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% lastWatchedCourses.forEach(function(course) { %>
+						<tr>
+							<td class="col-xs-6 col-sm-3"><%= course['name'] %></td>
+							<td class="col-xs-6 col-sm-3"><%= course['instructor'] %></td>
+							<td class="col-xs-6 col-sm-3"><%= course['videos'] %></td>
+						</tr>
+					<% }) %>
+				</tbody>
+			</table>
+	<% } else { %>
+		<div class="row">
+			<span>There no courses available.</span>
+		</div>
+	<% } %>
+</div>

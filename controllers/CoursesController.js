@@ -3,9 +3,11 @@ module.exports = function(app) {
 
 	var CoursesController = {
 		index: function(req, res) {
-			const coursesServices = new CoursesService(app);
+			const coursesService = new CoursesService(app);
 
-			res.render('courses/index', { title: 'Courses', _layoutFile: 'layout' });
+			coursesService.list_courses(function(lastWatchedCourses) {
+				res.render('courses/index', { title: 'Courses', _layoutFile: 'layout', lastWatchedCourses: lastWatchedCourses });
+			});
 		}
 	}
 
