@@ -1,33 +1,39 @@
 function ScrapService(app) {
-	const username = process.env.USERNAME;
-	const password = process.env.PASSWORD;
 	this.app = app;
 
-	var authenticate = function(cb) {
-		console.log('Authenticating user=', username);
+	var authenticate = function(callback) {
+		const username = process.env.USERNAME;
+		const password = process.env.PASSWORD;
 
-		app.locals.req.post({
-			url: `${process.env.TARGET_HOST}/login/index/autenticar`,
-			form: {email: username, senha: password},
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			}
-		},
+		if (username && password) {
+			console.log('Authenticating user =', username);
 
-		function(err, res, body) {
-			if (err) {
-				console.log('Error trying to authenticate: ', err);
-			}
+			app.locals.req.post({
+				url: `${process.env.TARGET_HOST}/login/index/autenticar`,
+				form: {email: username, senha: password},
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			},
 
-			if (res && res.statusCode === 200) {
-				console.log('Authenticated...');
+			function(err, res, body) {
+				if (err) {
+					console.log('Error trying to authenticate: ', err);
+				}
 
-				cb(res.headers['set-cookie']);
-			}
-		});
+				if (res && res.statusCode === 200) {
+					console.log('Authenticated...');
+
+					callback(res.headers['set-cookie']);
+				}
+			});
+		} else {
+			callback();
+		}
 	};
 
-	ScrapService.prototype.load = function(cb) {
+	ScrapService.prototype.load = function(callback=null) {
+		
 		authenticate(function(cookie) {
 			app.locals.req.get({
 				url: `${process.env.TARGET_HOST}/aluno`,
@@ -42,7 +48,7 @@ function ScrapService(app) {
 
 				console.log('Loading page...');
 
-				cb(body);
+				callback(body);
 			});
 		});
 	};

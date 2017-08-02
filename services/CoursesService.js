@@ -4,10 +4,10 @@ const util = require('util');
 function CoursesService(app) {
 	this.app = app;
 
-	CoursesService.prototype.list_courses = function(cb) {
+	CoursesService.prototype.list_courses = function(callback) {
 		const scrapService = new ScrapService(app);
 
-		return scrapService.load(function(body) {
+		scrapService.load(function(body) {
 			var $ = app.locals.cheerio.load(body);
 			let availableCourses = [];
 
@@ -19,7 +19,7 @@ function CoursesService(app) {
 				});
 			});
 
-			cb(availableCourses);
+			callback(availableCourses);
 		});
 	};
 
